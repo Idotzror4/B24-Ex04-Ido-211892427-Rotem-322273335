@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ex04.Menus.Interfaces
+namespace Ex04.Menus.Events
 {
     public class MainMenu
     {
@@ -18,6 +18,11 @@ namespace Ex04.Menus.Interfaces
             m_Menu = new MenuItem(i_MenuTitle, null);
         }
 
+        public MenuItem TheMenu
+        {
+            get { return m_Menu; }
+        }
+
         public MenuItem AddNewSubMenu(string i_MenuTitle)
         {
             return m_Menu.AddMenuToCurrentLevelMenus(i_MenuTitle);
@@ -29,15 +34,15 @@ namespace Ex04.Menus.Interfaces
 
             while (!exitPressed)
             {
-                string QuitOption = m_Menu.PreviousMenu == 
-                                     null ? k_ExitOption : k_BackOption;
+                string QuitOption = m_Menu.PreviousMenu ==
+                                      null ? k_ExitOption : k_BackOption;
                 int inputFromUser;
 
                 m_Menu.PrintMenu(QuitOption);
                 inputFromUser = gettingOptionFromUser();
-                if (inputFromUser == k_ChooseToQuit) 
+                if (inputFromUser == k_ChooseToQuit)
                 {
-                    if (m_Menu.PreviousMenu != null) 
+                    if (m_Menu.PreviousMenu != null)
                     {
                         m_Menu = m_Menu.PreviousMenu;
                     }
@@ -49,7 +54,7 @@ namespace Ex04.Menus.Interfaces
                 else
                 {
                     m_Menu = m_Menu.GetSubMenuChosenByUser(inputFromUser - 1);
-                    if(m_Menu.ItemsBelongThisLevelLenght == 0)
+                    if (m_Menu.ItemsBelongThisLevelLenght == 0)
                     {
                         m_Menu.SelectedOption();
                         m_Menu = m_Menu.PreviousMenu;
@@ -88,10 +93,10 @@ namespace Ex04.Menus.Interfaces
             if (!int.TryParse(Console.ReadLine(), out io_InputFromUser))
             {
                 throw new FormatException(string.Format(
-                                  "Invalid input format, Please enter a valid number."));
+                                      "Invalid input format, Please enter a valid number."));
             }
             else if (io_InputFromUser < 0 || 
-                                  io_InputFromUser > m_Menu.ItemsBelongThisLevelLenght)
+                                      io_InputFromUser > m_Menu.ItemsBelongThisLevelLenght)
             {
                 throw new ArgumentOutOfRangeException();
             }

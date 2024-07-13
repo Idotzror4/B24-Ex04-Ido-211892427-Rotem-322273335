@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ex04.Menus.Interfaces
+namespace Ex04.Menus.Events
 {
     public class MenuItem
     {
         private readonly string r_MenuTitle;
         private MenuItem m_PreviousMenu;
         private List<MenuItem> m_ItemsBelongThisLevel = new List<MenuItem>();
-        private List<ISelectedLeafMenuItem> m_Listeners = new List<ISelectedLeafMenuItem>();
+        public event Action Selected;
         private const string k_DottedLine = "=======================";
         private const string k_Arrow = "->";
 
@@ -32,19 +32,6 @@ namespace Ex04.Menus.Interfaces
             get { return m_ItemsBelongThisLevel.Count; }
         }
 
-        public void AddListener(ISelectedLeafMenuItem i_NewListener)
-        {
-            m_Listeners.Add(i_NewListener);
-        }
-
-        private void notifyListenersThatAMenuWasChosen()
-        {
-            foreach (ISelectedLeafMenuItem listener in m_Listeners)
-            {
-                listener.ExecuteMenuItemAction();
-            }
-        }
-
         public MenuItem GetSubMenuChosenByUser(int i_Index)
         {
             return m_ItemsBelongThisLevel[i_Index];
@@ -59,10 +46,15 @@ namespace Ex04.Menus.Interfaces
             return newMenu;
         }
 
+        protected virtual void OnSelected()
+        {
+            Selected?.Invoke();
+        }
+
         public void SelectedOption()
         {
             Console.Clear();
-            notifyListenersThatAMenuWasChosen();
+            OnSelected();
             Console.WriteLine(string.Format("Press any key to continue..."));
             Console.ReadKey();
         }
